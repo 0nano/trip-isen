@@ -1,6 +1,18 @@
 <?php
 include 'database.php'; // Inclut la connexion à la base de données
 
+function generateJWT($username) {
+    $header = base64UrlEncode(json_encode(['alg' => 'HS256', 'typ' => 'JWT']));
+    $payload = base64UrlEncode(json_encode(['username' => $username]));
+    $signature = '0U92PWHgVpMm8xwEuRReQjt4VrAxLHYqeNnZgZbhLpQ';
+    
+    return "$header.$payload.$signature";
+}
+
+function base64UrlEncode($data) {
+    return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
+}
+
 // Vérifie si la requête est une requête POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Récupère et sécurise les données du formulaire
@@ -15,16 +27,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Tous les champs sont obligatoires.");
     }
 
+    // Vérifie si l'username existe déjà dans la base de données
+    $sqlCheck = "SELECT COUNT(*) FROM users WHERE username = :username";
+    $stmtCheck = $pdo->prepare($sqlCheck);
+    $stmtCheck->bindParam(':username', $username);
+    $stmtCheck->execute();
+    $count = $stmtCheck->fetchColumn();
+
+    if ($count > 0) {
+        echo "<p>Username already taken. Chose an other one please</p>";
+        header("refresh:2;url=register.html");
+        exit;
+    }
+
     // Hachage du mot de passe
     $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-    // Génération d'un token JWT (optionnel, nécessite une bibliothèque pour le faire)
-    $jwt = bin2hex(random_bytes(16)); // Exemple simple de génération de token
+
 
     try {
         // Prépare la requête SQL pour insérer les données
         $sql = "INSERT INTO users (fname, lname, email, username, password, jwt) VALUES (:fname, :lname, :email, :username, :password, :jwt)";
         $stmt = $pdo->prepare($sql);
+
+        // Génération d'un token JWT
+        $jwt = generateJWT($username);
 
         // Lier les paramètres
         $stmt->bindParam(':fname', $firstName);
@@ -37,10 +64,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Exécuter la requête
         $stmt->execute();
 
-        $sql = "INSERT INTO images (name, proprietor) VALUES ('unknown.png', :proprietor)";
+        // Insérer une image par défaut
+        $sql = "INSERT INTO images (name, proprietor) VALUES ('unkonwn.png', :proprietor)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':proprietor', $username);
         $stmt->execute();
+
+        // Définir le cookie JWT
+        setcookie('auth_token', $jwt, [
+            'expires' => time() + 3600, // Expiration dans 1 heure
+            'path' => '/',
+        ]);
+
+        header("Location: profil.php");
 
         echo "Utilisateur enregistré avec succès.";
     } catch (PDOException $e) {

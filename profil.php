@@ -1,5 +1,27 @@
 <?php
 include 'database.php'; // Inclut la connexion à la base de données
+
+
+function decodeJWT($jwt) {
+    // Sépare le header, le payload et la signature
+    $parts = explode('.', $jwt);
+    if (count($parts) !== 3) {
+        return false; // JWT invalide
+    }
+
+    // Décodage Base64URL du payload
+    $payload = json_decode(base64UrlDecode($parts[1]), true);
+    if (!$payload) {
+        return false; // Payload invalide
+    }
+
+    return $payload; // Retourne le payload décodé si tout est valide
+}
+
+function base64UrlDecode($data) {
+    $base64 = strtr($data, '-_', '+/');
+    return base64_decode($base64);
+}
 ?>
 <!DOCTYPE html>
 <html lang="zxx" class="no-js">
@@ -49,7 +71,7 @@ include 'database.php'; // Inclut la connexion à la base de données
                             <ul class="navbar-nav">
                                 <li><a href="index.html#home">Home</a></li>
                                 <li><a href="index.html#contact">Contact</a></li>
-                                <li><a href="index.html#home">Logout</a></li>
+                                <li><a href="logout.php">Logout</a></li>
                             </ul>
                           </div>						
                     </div>
@@ -70,9 +92,29 @@ include 'database.php'; // Inclut la connexion à la base de données
                 <div class="row mb-30">
                     <div class="col-md-6">
                         <?php
+
+                            if (!isset($_COOKIE['auth_token'])) {
+                                echo "<p>Jeton JWT manquant. Veuillez vous connecter.</p>";
+                                header("refresh:2;url=login.php");
+                                exit;
+                            }
+
+                            // Décoder et vérifier le JWT
+                            $jwt = $_COOKIE['auth_token'];
+                            $payload = decodeJWT($jwt);
+
+                            if (!$payload || !isset($payload['username'])) {
+                                echo "<p>Jeton invalide. Veuillez vous reconnecter.</p>";
+                                header("refresh:2;url=login.php");
+                                exit;
+                            }
+
+                            // Récupérer l'username depuis le payload
+                            $username = $payload['username'];
+
                             $sql = "select fname, lname, email, username from users where username = :username";
                             $stmt = $pdo->prepare($sql);
-                            $stmt->bindParam(':username', $_COOKIE['username']);
+                            $stmt->bindParam(':username', $username);
                             $stmt->execute();
                             $user = $stmt->fetch();
 
@@ -100,7 +142,7 @@ include 'database.php'; // Inclut la connexion à la base de données
                             <?php
                             $sql = "select name from images where proprietor = :username";
                             $stmt = $pdo->prepare($sql);
-                            $stmt->bindParam(':username', $_COOKIE['username']);
+                            $stmt->bindParam(':username', $username);
                             $stmt->execute();
                             $image = $stmt->fetch();
                             echo "<img src='uploads/" .  $image['name'] . "' alt='Profile Picture' class='img-fluid' style='max-width: 150px; border-radius: 0%;'>";

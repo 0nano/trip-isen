@@ -47,8 +47,14 @@
 									<li><a href="#home">Home</a></li>
 									<li><a href="#about">About</a></li>									
 									<li><a href="#contact">Contact</a></li>
-									<li><a href="login.html">Login</a></li>
-									<li><a href="register.html">Register</a></li>
+									<script>
+										if (document.cookie.split(';').some((item) => item.trim().startsWith('auth_token='))) {
+											document.write('<li><a href="logout.php">Logout</a></li>');
+										} else {
+											document.write('<li><a href="login.html">Login</a></li>');
+											document.write('<li><a href="register.html">Register</a></li>');
+										}
+									</script>
 							    </ul>
 							  </div>						
 						</div>
