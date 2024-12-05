@@ -39,11 +39,14 @@ ENV PHP_INI_DIR=/etc/php83
 COPY docker/fpm-pool.conf ${PHP_INI_DIR}/php-fpm.d/www.conf
 COPY docker/php.ini ${PHP_INI_DIR}/conf.d/custom.ini
 
+# Configure PostgreSQL
+RUN mkdir -p /var/lib/postgresql/data /run/postgresql
+
 # Configure supervisord
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Make sure files/folders needed by the processes are accessable when they run under the nobody user
-RUN chown -R nobody:nobody /var/www/html /run /var/lib/nginx /var/log/nginx
+RUN chown -R nobody:nobody /var/www/html /run /var/lib/nginx /var/log/nginx /var/lib/postgresql/ /run/postgresql
 
 # Switch to use a non-root user from here on
 USER nobody
@@ -51,6 +54,9 @@ USER nobody
 # Add application and clear unwanted files
 COPY --chown=nobody . /var/www/html/
 RUN rm -rf docker/ .git/ .gitignore LICENSE README.md Dockerfile
+
+# Run postgresql initdb and create database
+RUN initdb -D /var/lib/postgresql/data --username="nobody" --pwfile=<(echo "nobody") --auth=trust
 
 # Expose the port nginx is reachable on
 EXPOSE 8080
