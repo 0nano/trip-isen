@@ -1,6 +1,6 @@
+# Based on the work of https://github.com/TrafeX/docker-php-nginx
 ARG ALPINE_VERSION=3.20
 FROM alpine:${ALPINE_VERSION}
-LABEL version="latest"
 
 # Setup document root
 WORKDIR /var/www/html

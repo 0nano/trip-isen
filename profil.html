@@ -87,10 +87,10 @@
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-md-6">
-                        <form id="profileForm">
+                        <form action="upload.php" method="post" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="passportPhoto">Upload Passport Photo</label>
-                                <input type="file" class="form-control-file" id="passportPhoto" accept="image/*" required>
+                                <input type="file" class="form-control-file" name="passportPhoto" id="passportPhoto" required>
                             </div>
                             <button type="submit" class="btn btn-primary btn-block">Submit</button>
                         </form>
@@ -98,40 +98,6 @@
                 </div>
             </div>
         </section>
-        <!-- End Generic Start -->
-         
-        <script>
-            document.getElementById('profileForm').addEventListener('submit', function(event) {
-                event.preventDefault();
-                
-                const passportPhoto = document.getElementById('passportPhoto').files[0];
-                if (!passportPhoto) {
-                    alert('Please upload a passport photo.');
-                    return;
-                }
-
-                const formData = new FormData();
-                formData.append('passportPhoto', passportPhoto);
-
-                fetch('your_upload_endpoint_here', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Passport photo uploaded successfully!');
-                        // Perform additional actions if needed
-                    } else {
-                        alert('Upload failed. Please try again.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred. Please try again later.');
-                });
-            });
-        </script>
 
     </div>
     <script src="js/vendor/jquery-2.2.4.min.js"></script>
