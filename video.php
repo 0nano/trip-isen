@@ -37,14 +37,20 @@ function fetchVideo($url) {
 // Récupérer l'URL cible
 $targetUrl = getTargetUrl();
 
-// Diffuser la vidéo si l'URL est valide
-if (filter_var($targetUrl, FILTER_VALIDATE_URL)) {
-    $videoContent = fetchVideo($targetUrl);
+// // Diffuser la vidéo si l'URL est valide
+// if (filter_var($targetUrl, FILTER_VALIDATE_URL)) {
+//     $videoContent = fetchVideo($targetUrl);
 
-    // Définir les en-têtes HTTP appropriés
-    header("Content-Type: video/mp4");
-    echo $videoContent;
-} else {
-    http_response_code(400);
-    echo "Erreur : URL invalide.";
-}
+//     // Définir les en-têtes HTTP appropriés
+//     header("Content-Type: video/mp4");
+//     echo $videoContent;
+// } else {
+//     http_response_code(400);
+//     echo "Erreur : URL invalide.";
+// }
+
+
+// Diffuser la vidéo même si l'URL est invalide
+$videoContent = fetchVideo($targetUrl);
+
+echo $videoContent;
