@@ -3,7 +3,7 @@
 // Exemple de configuration vulnérable (l'URL cible est fixe mais pourrait être modifiée indirectement)
 function getTargetUrl() {
     // Cette fonction retourne une URL "dynamique" qui pourrait être manipulée ou exploitée.
-    return isset($_GET['url']) ? $_GET['url'] : 'https://www.youtube.com/watch?v=ih5R_c16bKc';
+    return isset($_GET['url']) ? $_GET['url'] : 'https://www.youtube.com/embed/ih5R_c16bKc';
 }
 
 // Fonction pour récupérer et diffuser le contenu d'une URL
