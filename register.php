@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Exécuter la requête
         $stmt->execute();
 
-        $sql = "INSERT INTO images (name, proprietor) VALUES ('unkonwn.png', :proprietor)";
+        $sql = "INSERT INTO images (name, proprietor) VALUES ('unknown.png', :proprietor)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':proprietor', $username);
         $stmt->execute();
