@@ -59,6 +59,9 @@ RUN rm -rf docker/ .git/ .github/ .gitignore LICENSE README.md Dockerfile
 # Run postgresql initdb and create database
 RUN initdb -D /var/lib/postgresql/data --username="nobody" --pwfile=<(echo "nobody") --auth=trust
 
+# Create the flag for the RCE challenge
+RUN echo "flag{rce_is_not_a_good_idea}" > /var/www/html/flag.txt
+
 # Expose the port nginx is reachable on
 EXPOSE 8080
 
