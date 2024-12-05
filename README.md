@@ -1,2 +1,17 @@
 # trip-isen
 War Game pour le module de développement sécurisé dans les applications Web
+
+L'application est une application très simple d'agence de voyage. 
+
+## Installation
+L'application est entièrement compilé pour être utilisé avec Docker en un seul container. Pour lancer l'application, il suffit de lancer la commande suivante:
+```bash
+docker run -p 8080:8080 -d trip-isen
+```
+La base de données sera automatiquement créée et les données seront insérées. Il n'est pas nécessaire de lancer un script pour initialiser la base de données ou tout autre partie de l'application.
+
+## Utilisation
+L'application est accessible à l'adresse suivante: `http://localhost:8080`
+
+## Fonctionnalités
+L'application permet de créer un compte utilisateur, de s'y connecter pour réserver un voyage. Il est aussi possible de fournir son passeport pour une vérification de sécurité et obtenir les destinations en conséquence.
