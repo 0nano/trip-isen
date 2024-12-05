@@ -1,36 +1,50 @@
 <?php
 
-// Exemple de configuration vulnérable (l'URL cible est fixe mais pourrait être modifiée indirectement)
+// Exemple de configuration vulnérable (URL cible dynamique)
 function getTargetUrl() {
-    // Cette fonction retourne une URL "dynamique" qui pourrait être manipulée ou exploitée.
-    return isset($_GET['url']) ? $_GET['url'] : 'sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4';
+    return isset($_GET['url']) ? $_GET['url'] : 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4';
 }
 
-// Fonction pour récupérer et diffuser le contenu d'une URL
+// Fonction pour récupérer le contenu distant
 function fetchVideo($url) {
-    // Envoi d'une requête HTTP pour récupérer la vidéo (aucune validation de l'URL ici)
-    $context = stream_context_create([
-        'http' => [
-            'timeout' => 5, // Timeout pour éviter les requêtes bloquantes
-        ]
-    ]);
+    // Initialiser une session cURL
+    $ch = curl_init();
 
-    // Lire le contenu distant
-    $videoContent = @file_get_contents($url, false, $context);
+    // Configurer les options cURL
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // Suivre les redirections
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10); // Timeout après 10 secondes
 
-    if ($videoContent === false) {
+    // Exécuter la requête et récupérer le contenu
+    $videoContent = curl_exec($ch);
+
+    // Vérifier les erreurs
+    if (curl_errno($ch)) {
         http_response_code(500);
         echo "Erreur : Impossible de charger la vidéo.";
+        curl_close($ch);
         exit;
     }
 
-    // Définir les en-têtes HTTP appropriés pour la vidéo
-    header("Content-Type: video/mp4");
-    echo $videoContent;
+    // Fermer la session cURL
+    curl_close($ch);
+
+    // Renvoyer le contenu
+    return $videoContent;
 }
 
-// Récupérer l'URL cible (source de la vulnérabilité)
+// Récupérer l'URL cible
 $targetUrl = getTargetUrl();
 
-// Appeler la fonction pour diffuser la vidéo
-fetchVideo($targetUrl);
+// Diffuser la vidéo si l'URL est valide
+if (filter_var($targetUrl, FILTER_VALIDATE_URL)) {
+    $videoContent = fetchVideo($targetUrl);
+
+    // Définir les en-têtes HTTP appropriés
+    header("Content-Type: video/mp4");
+    echo $videoContent;
+} else {
+    http_response_code(400);
+    echo "Erreur : URL invalide.";
+}
