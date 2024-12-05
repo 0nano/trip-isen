@@ -1,4 +1,6 @@
 <?php
+    include 'database.php';
+
     $target_dir = "uploads/";
     $target_file = $target_dir . basename($_FILES["passportPhoto"]["name"]);
     $uploadOk = 1;
@@ -20,7 +22,22 @@
         echo "Sorry, there was an error uploading your file.";
       }
     }
+    $sql = "select name from images where proprietor = :username";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':username', $_COOKIE['username']);
+    $stmt->execute();
+    $image = $stmt->fetch();
+
+    // delete the old image
+    unlink("uploads/" . $image['name']);
+
+    // update table images
+    $sql = "update images set name = :name where proprietor = :username";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':name', basename($_FILES["passportPhoto"]["name"]));
+    $stmt->bindParam(':username', $_COOKIE['username']);
+    $stmt->execute();
 
     // redirect to the profil page after 5 seconds
-    header("refresh:2;url=profil.html");
+    header("refresh:2;url=profil.php");
 ?>

@@ -1,3 +1,6 @@
+<?php
+include 'database.php'; // Inclut la connexion à la base de données
+?>
 <!DOCTYPE html>
 <html lang="zxx" class="no-js">
 <head>
@@ -66,22 +69,42 @@
                 <h3 class="profile-title mb-30">Profile Information</h3>
                 <div class="row mb-30">
                     <div class="col-md-6">
-                        <div class="profile-info">
-                            <h4>First Name:</h4>
-                            <p>John</p> <!-- Replace with dynamic first name if needed -->
-                            <h4>Last Name:</h4>
-                            <p>Doe</p> <!-- Replace with dynamic last name if needed -->
-                            <h4>Email:</h4>
-                            <p>user@example.com</p> <!-- Replace with dynamic email if needed -->
-                            <h4>Username:</h4>
-                            <p>user</p> <!-- Replace with dynamic email if needed -->
-                        </div>
+                        <?php
+                            $sql = "select fname, lname, email, username from users where username = :username";
+                            $stmt = $pdo->prepare($sql);
+                            $stmt->bindParam(':username', $_COOKIE['username']);
+                            $stmt->execute();
+                            $user = $stmt->fetch();
+
+                            if ($user) {
+                                echo "<div class='profile-info'>";
+                                echo "<h4>First Name:</h4>";
+                                echo "<p id='fname'>" . $user['fname'] . "</p>";
+                                echo "<h4>Last Name:</h4>";
+                                echo "<p id='lname'>" . $user['lname'] . "</p>";
+                                echo "<h4>Email:</h4>";
+                                echo "<p id='email'>" . $user['email'] . "</p>";
+                                echo "<h4>Username:</h4>";
+                                echo "<p id='username'>" . $user['username'] . "</p>";
+                                echo "</div>";
+                            } else {
+                                echo "<p>Utilisateur introuvable.</p>";
+                                header("refresh:2;url=register.php");
+                            }
+                        ?>
                     </div>
                     <div class="col-md-6">
                         <div class="profile-picture">
                             <h4>Passeport:</h4>
                             <br>
-                            <img src="img/unknown.png" alt="Profile Picture" class="img-fluid" style="max-width: 150px; border-radius: 0%;">
+                            <?php
+                            $sql = "select name from images where proprietor = :username";
+                            $stmt = $pdo->prepare($sql);
+                            $stmt->bindParam(':username', $_COOKIE['username']);
+                            $stmt->execute();
+                            $image = $stmt->fetch();
+                            echo "<img src='uploads/" .  $image['name'] . "' alt='Profile Picture' class='img-fluid' style='max-width: 150px; border-radius: 0%;'>";
+                            ?>
                         </div>
                     </div>
                 </div>

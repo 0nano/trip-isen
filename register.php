@@ -1,5 +1,5 @@
 <?php
-include 'db_connection.php'; // Inclut la connexion à la base de données
+include 'database.php'; // Inclut la connexion à la base de données
 
 // Vérifie si la requête est une requête POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
