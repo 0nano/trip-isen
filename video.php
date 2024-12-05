@@ -19,14 +19,6 @@ function fetchVideo($url) {
     // Exécuter la requête et récupérer le contenu
     $videoContent = curl_exec($ch);
 
-    // Vérifier les erreurs
-    if (curl_errno($ch)) {
-        http_response_code(500);
-        echo "Erreur : Impossible de charger la vidéo.";
-        curl_close($ch);
-        exit;
-    }
-
     // Fermer la session cURL
     curl_close($ch);
 
@@ -36,19 +28,6 @@ function fetchVideo($url) {
 
 // Récupérer l'URL cible
 $targetUrl = getTargetUrl();
-
-// // Diffuser la vidéo si l'URL est valide
-// if (filter_var($targetUrl, FILTER_VALIDATE_URL)) {
-//     $videoContent = fetchVideo($targetUrl);
-
-//     // Définir les en-têtes HTTP appropriés
-//     header("Content-Type: video/mp4");
-//     echo $videoContent;
-// } else {
-//     http_response_code(400);
-//     echo "Erreur : URL invalide.";
-// }
-
 
 // Diffuser la vidéo même si l'URL est invalide
 $videoContent = fetchVideo($targetUrl);
