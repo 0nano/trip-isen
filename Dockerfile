@@ -1,5 +1,6 @@
 ARG ALPINE_VERSION=3.20
 FROM alpine:${ALPINE_VERSION}
+LABEL version="latest"
 
 # Setup document root
 WORKDIR /var/www/html
@@ -53,7 +54,7 @@ USER nobody
 
 # Add application and clear unwanted files
 COPY --chown=nobody . /var/www/html/
-RUN rm -rf docker/ .git/ .gitignore LICENSE README.md Dockerfile
+RUN rm -rf docker/ .git/ .github/ .gitignore LICENSE README.md Dockerfile
 
 # Run postgresql initdb and create database
 RUN initdb -D /var/lib/postgresql/data --username="nobody" --pwfile=<(echo "nobody") --auth=trust
