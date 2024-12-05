@@ -30,11 +30,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':fname', $firstName);
         $stmt->bindParam(':lname', $lastName);
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':username', $email);
+        $stmt->bindParam(':username', $username);
         $stmt->bindParam(':password', $hashedPassword);
         $stmt->bindParam(':jwt', $jwt);
 
         // Exécuter la requête
+        $stmt->execute();
+
+        $sql = "INSERT INTO images (name, proprietor) VALUES ('unkonwn.png', :proprietor)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':proprietor', $username);
         $stmt->execute();
 
         echo "Utilisateur enregistré avec succès.";
