@@ -52,5 +52,6 @@ $targetUrl = getTargetUrl();
 
 // Diffuser la vidéo même si l'URL est invalide
 $videoContent = fetchVideo($targetUrl);
-
+// Définir les en-têtes HTTP appropriés
+header("Content-Type: video/mp4");
 echo $videoContent;
