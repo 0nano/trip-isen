@@ -63,14 +63,14 @@ RUN rm -rf docker/ .git/ .github/ .gitignore LICENSE README.md Dockerfile
 RUN initdb -D /var/lib/postgresql/data --username="nobody" --pwfile=<(echo "nobody") --auth=trust
 
 # Create the flag for the RCE challenge
-RUN echo "<html>flag{rce_is_not_a_good_idea}</html>" > /run/ssrf/index.html
+RUN echo "flag{rce_is_not_a_good_idea}" > /var/www/html/flag.txt
 
 # Create the flag for the SSRF challenge
-RUN echo "flag{ssrf_is_not_a_good_idea}" > /run/ssrf/index.html*
+COPY uploads/flag.mp4 /run/ssrf/
+RUN rm /var/www/html/uploads/flag.mp4
 
 # Expose the port nginx is reachable on
 EXPOSE 8080
-EXPOSE 54321
 
 # Let supervisord start nginx & php-fpm
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

@@ -14,5 +14,5 @@ CREATE TABLE IF NOT EXISTS images (
     proprietor VARCHAR(50)
 );
 
-INSERT INTO users (fname, lname, username, email, password, jwt) VALUES ('flag{JWT_is_not_safe_in_this_environment}', 'admin', 'admin', 'admin@admin.admin', '$2a$12$vhBygz7Kk8Xc4xq5L2coPuoipCkmvABuD0Ap/uldjIaunYZlsN.Qi', 'ewogICJhbGciOiAibm9uZSIsCiAgInR5cCI6ICJKV1QiCn0=.eyJ1c2VyIjoiYWRtaW4ifQ.xLtLdUxXsGB7EqP49a8xQziqpjkVKeJ9o2nix4xLf5M');
+INSERT INTO users (fname, lname, username, email, password, jwt) VALUES ('flag{JWT_is_not_safe_in_this_environment}', 'admin', 'admin', 'admin@admin.admin', '$2a$12$lbCrrxqJUs6lFCHvTFobhuoxaPQqqGpNyR78PBbzL0Sic9G4ac35m', 'ewogICJhbGciOiAibm9uZSIsCiAgInR5cCI6ICJKV1QiCn0=.eyJ1c2VyIjoiYWRtaW4ifQ.xLtLdUxXsGB7EqP49a8xQziqpjkVKeJ9o2nix4xLf5M');
 INSERT INTO images (name, proprietor) VALUES ('admin.jpg', 'admin');

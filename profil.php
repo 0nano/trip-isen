@@ -39,7 +39,7 @@ function base64UrlDecode($data) {
     <!-- meta character set -->
     <meta charset="UTF-8">
     <!-- Site Title -->
-    <title>Adventure</title>
+    <title>Trip'ISEN</title>
 
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet"> 
         <!--
@@ -95,7 +95,7 @@ function base64UrlDecode($data) {
 
                             if (!isset($_COOKIE['auth_token'])) {
                                 echo "<p>Jeton JWT manquant. Veuillez vous connecter.</p>";
-                                header("refresh:2;url=login.php");
+                                header("refresh:2;url=login.html");
                                 exit;
                             }
 
@@ -105,7 +105,7 @@ function base64UrlDecode($data) {
 
                             if (!$payload || !isset($payload['username'])) {
                                 echo "<p>Jeton invalide. Veuillez vous reconnecter.</p>";
-                                header("refresh:2;url=login.php");
+                                header("refresh:2;url=login.html");
                                 exit;
                             }
 

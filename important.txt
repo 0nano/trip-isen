@@ -1,0 +1,4 @@
+Serveur admin privé +18 sur le port 54321
+attention pas accessible au public
+
+PS: Les vidéos sont pas mal (surtout la flag) mais je n'ai pas le droit de les partager, désolé.
