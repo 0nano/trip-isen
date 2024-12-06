@@ -46,8 +46,11 @@ RUN mkdir -p /var/lib/postgresql/data /run/postgresql
 # Configure supervisord
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+# Create a directory for the SSRF challenge
+RUN mkdir /run/ssrf
+
 # Make sure files/folders needed by the processes are accessable when they run under the nobody user
-RUN chown -R nobody:nobody /var/www/html /run /var/lib/nginx /var/log/nginx /var/lib/postgresql/ /run/postgresql
+RUN chown -R nobody:nobody /var/www/html /run /var/lib/nginx /var/log/nginx /var/lib/postgresql/ /run/postgresql /run/ssrf
 
 # Switch to use a non-root user from here on
 USER nobody
@@ -60,10 +63,14 @@ RUN rm -rf docker/ .git/ .github/ .gitignore LICENSE README.md Dockerfile
 RUN initdb -D /var/lib/postgresql/data --username="nobody" --pwfile=<(echo "nobody") --auth=trust
 
 # Create the flag for the RCE challenge
-RUN echo "flag{rce_is_not_a_good_idea}" > /var/www/html/flag.txt
+RUN echo "<html>flag{rce_is_not_a_good_idea}</html>" > /run/ssrf/index.html
+
+# Create the flag for the SSRF challenge
+RUN echo "flag{ssrf_is_not_a_good_idea}" > /run/ssrf/index.html*
 
 # Expose the port nginx is reachable on
 EXPOSE 8080
+EXPOSE 54321
 
 # Let supervisord start nginx & php-fpm
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
