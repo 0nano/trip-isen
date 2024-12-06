@@ -3,10 +3,16 @@ War Game pour le module de développement sécurisé dans les applications Web
 
 L'application est une application très simple d'agence de voyage. 
 
+## Récupération de l'image Docker
+L'image Docker est disponible à la récuparation sur Github container avec la commande suivante:
+```bash
+docker pull ghcr.io/0nano/trip-isen:main
+```
+
 ## Installation
 L'application est entièrement compilé pour être utilisé avec Docker en un seul container. Pour lancer l'application, il suffit de lancer la commande suivante:
 ```bash
-docker run -p 8080:8080 -d trip-isen
+docker run -p 8080:8080 -d ghcr.io/0nano/trip-isen:main
 ```
 La base de données sera automatiquement créée et les données seront insérées. Il n'est pas nécessaire de lancer un script pour initialiser la base de données ou tout autre partie de l'application.
 
