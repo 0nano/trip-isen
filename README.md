@@ -4,7 +4,7 @@ War Game pour le module de développement sécurisé dans les applications Web
 L'application est une application très simple d'agence de voyage. 
 
 ## Récupération de l'image Docker
-L'image Docker est disponible à la récupération sur Github container avec la commande suivante :
+L'image Docker est disponible à la récupération avec la commande suivante :
 ```bash
 docker pull ghcr.io/0nano/trip-isen:main
 ```
